@@ -1,0 +1,16 @@
+# Variables d'environnement — NE JAMAIS committer
+.env
+
+# Fichiers uploadés par les utilisateurs
+assets/images/uploads/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Dépendances
+/vendor/
+node_modules/

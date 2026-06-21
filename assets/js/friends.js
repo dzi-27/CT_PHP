@@ -47,20 +47,18 @@ function showTab(tab) {
 function apiRequest(url, method = 'GET', data = null) {
     const options = {
         method: method,
-        headers: {}
+        headers: {
+            'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+        }
     };
-    
     if (data && method !== 'GET') {
         options.headers['Content-Type'] = 'application/json';
         options.body = JSON.stringify(data);
     }
-    
     return fetch(url, options)
         .then(response => response.json())
         .then(data => {
-            if (!data.success) {
-                throw new Error(data.error || 'Erreur API');
-            }
+            if (!data.success) throw new Error(data.error || 'Erreur API');
             return data;
         });
 }

@@ -3,6 +3,14 @@ let lastMessageId = 0;
 let pollingInterval = null;
 let isChatActive = false;
 
+// Helper pour récupérer les headers d'authentification
+// Le token est stocké dans sessionStorage après la connexion
+function getAuthHeaders() {
+    return {
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+    };
+}
+
 function initChat() {
     isChatActive = true;
     
@@ -49,7 +57,10 @@ function loadConversations() {
     const container = document.getElementById('conversations-list');
     container.innerHTML = '<div class="loading">Chargement...</div>';
     
-    fetch('../../api/chat/get-conversations.php')
+    // Token ajouté dans le header
+    fetch('../../api/chat/get-conversations.php', {
+        headers: getAuthHeaders()
+    })
         .then(response => response.json())
         .then(data => {
             if (!data.success) {
@@ -134,7 +145,10 @@ function openConversation(friendId) {
 function loadMessages() {
     if (!currentFriendId) return;
     
-    fetch(`../../api/chat/get-messages.php?friend_id=${currentFriendId}&last_id=${lastMessageId}`)
+    // Token ajouté dans le header
+    fetch(`../../api/chat/get-messages.php?friend_id=${currentFriendId}&last_id=${lastMessageId}`, {
+        headers: getAuthHeaders()
+    })
         .then(response => response.json())
         .then(data => {
             if (!data.success) {
@@ -151,11 +165,14 @@ function loadMessages() {
         });
 }
 
-// Rafraîchir les messages (polling)
+// Rafraîchir les messages (polling toutes les 3s)
 function refreshMessages() {
     if (!currentFriendId) return;
     
-    fetch(`../../api/chat/get-messages.php?friend_id=${currentFriendId}&last_id=${lastMessageId}`)
+    // Token ajouté dans le header
+    fetch(`../../api/chat/get-messages.php?friend_id=${currentFriendId}&last_id=${lastMessageId}`, {
+        headers: getAuthHeaders()
+    })
         .then(response => response.json())
         .then(data => {
             if (!data.success) return;
@@ -219,10 +236,13 @@ function sendMessage() {
     container.scrollTop = container.scrollHeight;
     input.value = '';
     
-    // Envoyer au serveur
+    // Token ajouté dans le header + Content-Type pour JSON
     fetch('../../api/chat/send-message.php', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            ...getAuthHeaders(),
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             receiver_id: currentFriendId,
             contenu: contenu
@@ -274,8 +294,12 @@ function uploadImage(file) {
     container.appendChild(messageDiv);
     container.scrollTop = container.scrollHeight;
     
+    // Token ajouté dans le header
+    // IMPORTANT : pas de Content-Type ici — le navigateur le gère
+    // automatiquement avec FormData (multipart/form-data + boundary)
     fetch('../../api/chat/upload-image.php', {
         method: 'POST',
+        headers: getAuthHeaders(),
         body: formData
     })
     .then(response => response.json())
@@ -294,7 +318,7 @@ function uploadImage(file) {
 // Marquer les messages comme lus
 function markAsRead() {
     // Les messages sont marqués comme lus dans get-messages.php
-    // On peut juste rafraîchir la liste des conversations pour mettre à jour le badge
+    // On rafraîchit la liste des conversations pour mettre à jour le badge
     loadConversations();
 }
 
@@ -336,7 +360,7 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// Nettoyer le polling
+// Nettoyer le polling quand on quitte la vue chat
 function cleanupChat() {
     isChatActive = false;
     if (pollingInterval) {

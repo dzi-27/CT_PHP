@@ -26,58 +26,73 @@ require_once __DIR__ . '/database.php';
  * 
  * On récupère ce header côté PHP et on extrait le token.
  */
-$headers = getallheaders();
-$authHeader = $headers['Authorization'] ?? '';
-
-// Vérifier que le header Authorization est bien présent
-if (empty($authHeader)) {
-    http_response_code(401);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Accès refusé : aucun token fourni.'
-    ]);
-    exit;
+function getCurrentUser($pdo = null) {
+    // Si $pdo n'est pas fourni, on le récupère via getDBConnection()
+    if ($pdo === null) {
+        $pdo = getDBConnection();
+    }
+    
+    // ÉTAPE 1 — Récupérer le token depuis le header Authorization
+    $headers = getallheaders();
+    $authHeader = $headers['Authorization'] ?? '';
+    
+    if (empty($authHeader)) {
+        return false;
+    }
+    
+    // Extraire le token (format : "Bearer MON_TOKEN")
+    $token = str_replace('Bearer ', '', $authHeader);
+    
+    // ÉTAPE 2 — Vérifier le token en base de données
+    $stmt = $pdo->prepare("
+        SELECT 
+            u.id,
+            u.prenom,
+            u.nom,
+            u.email,
+            u.avatar,
+            u.role,
+            u.is_online
+        FROM sessions s
+        JOIN users u ON u.id = s.user_id
+        WHERE s.token = ?
+          AND s.expires_at > NOW()
+    ");
+    $stmt->execute([$token]);
+    $currentUser = $stmt->fetch();
+    
+    // ÉTAPE 3 — Retourner l'utilisateur ou false
+    return $currentUser ?: false;
 }
 
-// Extraire le token (format : "Bearer MON_TOKEN")
-// On enlève le préfixe "Bearer " pour garder seulement le token
-$token = str_replace('Bearer ', '', $authHeader);
-
 /**
- * ÉTAPE 2 — Vérifier le token en base de données
- * 
- * On cherche ce token dans la table "sessions".
- * On vérifie aussi que la session n'est pas expirée (expires_at > maintenant).
- * Si le token est valide, on récupère les infos de l'utilisateur associé.
+ * Vérifie que l'utilisateur est authentifié
+ * Retourne les infos ou envoie une erreur 401
  */
-$stmt = $pdo->prepare("
-    SELECT 
-        u.id,
-        u.prenom,
-        u.nom,
-        u.email,
-        u.avatar,
-        u.role
-    FROM sessions s
-    -- On joint la table users pour récupérer les infos de l'utilisateur
-    JOIN users u ON u.id = s.user_id
-    WHERE s.token = ?
-      AND s.expires_at > NOW()
-");
-$stmt->execute([$token]);
-$currentUser = $stmt->fetch();
-
-/**
- * ÉTAPE 3 — Bloquer l'accès si le token est invalide ou expiré
- */
-if (!$currentUser) {
-    http_response_code(401);
-    echo json_encode([
-        'success' => false,
-        'message' => 'Session expirée ou invalide. Veuillez vous reconnecter.'
-    ]);
-    exit;
+function authenticate() {
+    $user = getCurrentUser();
+    
+    if (!$user) {
+        http_response_code(401);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Accès refusé : session expirée ou invalide. Veuillez vous reconnecter.'
+        ]);
+        exit;
+    }
+    
+    // Mettre à jour le statut en ligne
+    try {
+        $pdo = getDBConnection();
+        $stmt = $pdo->prepare("UPDATE users SET is_online = 1 WHERE id = ?");
+        $stmt->execute([$user['id']]);
+    } catch (PDOException $e) {
+        // On ignore
+    }
+    
+    return $user;
 }
+
 
 /**
  * Si on arrive ici, l'utilisateur est bien connecté.

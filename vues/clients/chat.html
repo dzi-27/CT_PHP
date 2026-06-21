@@ -1,11 +1,54 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Réseau Social</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages</title>
+    <link rel="stylesheet" href="../../assets/css/chat.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
 </head>
 <body>
-  <!-- [vues/clients/chat.html] — TODO -->
+    <div id="navbar"></div>
+    
+    <main class="container">
+        <div class="chat-container">
+            <!-- Sidebar gauche (30%) -->
+            <div class="chat-sidebar">
+                <div class="chat-sidebar-header">
+                    <h3>Conversations</h3>
+                    <input type="text" id="search-friends" placeholder="🔍 Rechercher un ami...">
+                </div>
+                <div id="conversations-list">
+                    <!-- Rempli dynamiquement par chat.js -->
+                </div>
+            </div>
+            
+            <!-- Zone messages droite (70%) -->
+            <div class="chat-main">
+                <!-- En-tête -->
+                <div class="chat-header">
+                    <div id="chat-contact-info" class="chat-contact-info">
+                        <span class="chat-placeholder">Sélectionnez une conversation</span>
+                    </div>
+                </div>
+                
+                <!-- Zone de messages -->
+                <div id="messages-container" class="messages-container">
+                    <!-- Rempli dynamiquement par chat.js -->
+                </div>
+                
+                <!-- Zone d'envoi -->
+                <div class="message-input-area">
+                    <input type="file" id="image-input" accept="image/*" style="display:none">
+                    <button id="image-upload-btn" title="Envoyer une image">📎</button>
+                    <textarea id="message-input" placeholder="Écrire un message..." rows="1"></textarea>
+                    <button id="send-btn">Envoyer</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="../../assets/js/navbar.js"></script>
+    <script src="../../assets/js/chat.js"></script>
 </body>
 </html>

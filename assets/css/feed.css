@@ -1,1 +1,143 @@
 /* [assets/css/feed.css] — TODO */
+/* Styles pour la gestion des amis */
+.friends-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.friends-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+    border-radius: 5px;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.tab-btn:hover {
+    background: #f0f0f0;
+}
+
+.tab-btn.active {
+    color: #007bff;
+    background: #e3f2fd;
+}
+
+.tab-btn .badge {
+    background: #dc3545;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.tab-content {
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.users-grid, .friends-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+}
+
+.user-card, .friend-card, .invitation-card {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.user-card:hover, .friend-card:hover, .invitation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.user-card .avatar, .friend-card .avatar, .invitation-card .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.user-info, .friend-info, .invitation-info {
+    flex: 1;
+}
+
+.user-info h4, .friend-info h4, .invitation-info h4 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.user-info .status, .friend-info .status {
+    font-size: 12px;
+}
+
+.status.online { color: #28a745; }
+.status.offline { color: #6c757d; }
+
+.user-actions, .friend-actions, .invitation-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn-add, .btn-pending, .btn-friend,
+.btn-accept, .btn-reject, .btn-chat, .btn-remove {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s;
+}
+
+.btn-add { background: #007bff; color: white; }
+.btn-add:hover { background: #0056b3; transform: scale(1.05); }
+
+.btn-pending { background: #ffc107; color: #333; cursor: not-allowed; }
+.btn-friend { background: #28a745; color: white; cursor: not-allowed; }
+
+.btn-accept { background: #28a745; color: white; }
+.btn-accept:hover { background: #1e7e34; }
+
+.btn-reject { background: #dc3545; color: white; }
+.btn-reject:hover { background: #bd2130; }
+
+.btn-chat { background: #17a2b8; color: white; }
+.btn-chat:hover { background: #117a8b; }
+
+.btn-remove { background: #dc3545; color: white; }
+.btn-remove:hover { background: #bd2130; }
+
+.loading { text-align: center; color: #666; padding: 40px; }
+.empty { text-align: center; color: #999; padding: 40px; }
+.error { text-align: center; color: #dc3545; padding: 40px; }
+
+.invitations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

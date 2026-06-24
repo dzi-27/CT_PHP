@@ -1,11 +1,57 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Réseau Social</title>
-</head>
-<body>
-  <!-- [vues/clients/navbar.html] — TODO -->
-</body>
-</html>
+<!-- 
+    Composant navbar commun à toutes les vues protégées.
+    Ce fichier est chargé dynamiquement par navbar.js
+    et injecté dans <div id="navbar"> de index.html.
+    Il ne contient PAS de DOCTYPE, html, head ou body
+    car il est injecté à l'intérieur de index.html.
+-->
+
+<nav class="navbar">
+
+    <!-- Logo / Nom du réseau social -->
+    <div class="navbar-brand">
+        <a href="#/home" class="navbar-logo">
+            🌐 ResoCo
+        </a>
+    </div>
+
+    <!-- Liens de navigation principaux -->
+    <div class="navbar-links">
+        <a href="#/home" class="nav-link" data-route="/home">
+            🏠 Accueil
+        </a>
+        <a href="#/friends" class="nav-link" data-route="/friends">
+            👥 Amis
+            <!-- Badge pour les invitations reçues -->
+            <span id="friends-badge" class="badge" style="display:none;">0</span>
+        </a>
+        <a href="#/chat" class="nav-link" data-route="/chat">
+            💬 Messages
+            <!-- Badge pour les messages non lus -->
+            <span id="messages-badge" class="badge" style="display:none;">0</span>
+        </a>
+        <a href="#/profile" class="nav-link" data-route="/profile">
+            👤 Profil
+        </a>
+    </div>
+
+    <!-- Infos de l'utilisateur connecté + déconnexion -->
+    <div class="navbar-user">
+        <!-- Avatar et prénom — remplis par navbar.js depuis sessionStorage -->
+        <div class="navbar-user-info">
+            <img 
+                id="navbar-avatar" 
+                src="assets/images/default-avatar.png" 
+                alt="Avatar" 
+                class="navbar-avatar"
+            >
+            <span id="navbar-prenom" class="navbar-prenom"></span>
+        </div>
+
+        <!-- Bouton de déconnexion -->
+        <button id="btn-logout" class="btn btn-logout">
+            🚪 Déconnexion
+        </button>
+    </div>
+
+</nav>

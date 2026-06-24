@@ -1,11 +1,240 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Réseau Social</title>
-</head>
-<body>
-  <!-- [vues/clients/register.html] — TODO -->
-</body>
-</html>
+<!--
+    Page d'inscription.
+    Chargée dynamiquement par app.js dans <div id="app">.
+    Pas de DOCTYPE, html, head ou body — c'est une vue partielle.
+    Toute la logique est dans assets/js/auth.js (initRegisterForm).
+-->
+
+<div class="auth-container">
+    <div class="auth-card">
+
+        <!-- En-tête -->
+        <div class="auth-header">
+            <h1 class="auth-title">🌐 ResoCo</h1>
+            <p class="auth-subtitle">Créer un nouveau compte</p>
+        </div>
+
+        <!-- Message d'erreur — caché par défaut, affiché par auth.js -->
+        <div id="error-message" class="alert alert-error" style="display:none;"></div>
+
+        <!-- Message de succès — caché par défaut -->
+        <div id="success-message" class="alert alert-success" style="display:none;"></div>
+
+        <!-- Formulaire d'inscription -->
+        <!-- PAS d'action ni de method — auth.js gère la soumission via AJAX -->
+        <form id="form-register">
+
+            <!-- Prénom et Nom sur la même ligne -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="input-prenom">Prénom</label>
+                    <input
+                        type="text"
+                        id="input-prenom"
+                        class="form-input"
+                        placeholder="Votre prénom"
+                        required
+                        autocomplete="given-name"
+                        maxlength="50"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="input-nom">Nom</label>
+                    <input
+                        type="text"
+                        id="input-nom"
+                        class="form-input"
+                        placeholder="Votre nom"
+                        required
+                        autocomplete="family-name"
+                        maxlength="50"
+                    >
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label class="form-label" for="input-email">Adresse email</label>
+                <input
+                    type="email"
+                    id="input-email"
+                    class="form-input"
+                    placeholder="votre@email.com"
+                    required
+                    autocomplete="email"
+                    maxlength="100"
+                >
+            </div>
+
+            <!-- Mot de passe -->
+            <div class="form-group">
+                <label class="form-label" for="input-password">
+                    Mot de passe
+                    <small class="form-hint">8 caractères minimum</small>
+                </label>
+                <div class="input-password-wrapper">
+                    <input
+                        type="password"
+                        id="input-password"
+                        class="form-input"
+                        placeholder="Choisissez un mot de passe"
+                        required
+                        autocomplete="new-password"
+                        minlength="8"
+                    >
+                    <!-- Bouton pour afficher/cacher le mot de passe -->
+                    <button
+                        type="button"
+                        class="btn-toggle-password"
+                        id="toggle-password"
+                        title="Afficher/Cacher le mot de passe"
+                    >👁️</button>
+                </div>
+
+                <!-- Indicateur de force du mot de passe -->
+                <div class="password-strength" id="password-strength" style="display:none;">
+                    <div class="strength-bar">
+                        <div class="strength-fill" id="strength-fill"></div>
+                    </div>
+                    <span class="strength-label" id="strength-label"></span>
+                </div>
+            </div>
+
+            <!-- Confirmation du mot de passe -->
+            <div class="form-group">
+                <label class="form-label" for="input-confirm-password">
+                    Confirmer le mot de passe
+                </label>
+                <div class="input-password-wrapper">
+                    <input
+                        type="password"
+                        id="input-confirm-password"
+                        class="form-input"
+                        placeholder="Répétez votre mot de passe"
+                        required
+                        autocomplete="new-password"
+                    >
+                    <button
+                        type="button"
+                        class="btn-toggle-password"
+                        id="toggle-confirm-password"
+                        title="Afficher/Cacher le mot de passe"
+                    >👁️</button>
+                </div>
+                <!-- Indicateur de correspondance des mots de passe -->
+                <small id="password-match" style="display:none;"></small>
+            </div>
+
+            <!-- Bouton d'inscription -->
+            <button type="submit" id="btn-register" class="btn btn-primary btn-full">
+                Créer mon compte
+            </button>
+
+        </form>
+
+        <!-- Lien vers la connexion -->
+        <div class="auth-footer">
+            <p>Déjà un compte ?
+                <a href="#/login" class="auth-link">Se connecter</a>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<!-- Script inline pour les interactions UX de cette vue uniquement -->
+<script>
+/**
+ * Afficher / Cacher le mot de passe
+ * Quand l'utilisateur clique sur l'icône 👁️
+ */
+function togglePasswordVisibility(inputId, btnId) {
+    const input = document.getElementById(inputId);
+    const btn   = document.getElementById(btnId);
+    if (!input || !btn) return;
+
+    if (input.type === 'password') {
+        input.type   = 'text';
+        btn.textContent = '🙈';
+    } else {
+        input.type   = 'password';
+        btn.textContent = '👁️';
+    }
+}
+
+document.getElementById('toggle-password')?.addEventListener('click', function() {
+    togglePasswordVisibility('input-password', 'toggle-password');
+});
+
+document.getElementById('toggle-confirm-password')?.addEventListener('click', function() {
+    togglePasswordVisibility('input-confirm-password', 'toggle-confirm-password');
+});
+
+/**
+ * Indicateur de force du mot de passe
+ * Se met à jour en temps réel pendant la saisie
+ */
+document.getElementById('input-password')?.addEventListener('input', function() {
+    const password     = this.value;
+    const strengthBar  = document.getElementById('password-strength');
+    const strengthFill = document.getElementById('strength-fill');
+    const strengthLabel = document.getElementById('strength-label');
+
+    if (password.length === 0) {
+        strengthBar.style.display = 'none';
+        return;
+    }
+
+    strengthBar.style.display = 'block';
+
+    // Calculer la force du mot de passe
+    let score = 0;
+    if (password.length >= 8)  score++;  // longueur minimale
+    if (password.length >= 12) score++;  // longueur confortable
+    if (/[A-Z]/.test(password)) score++; // majuscule
+    if (/[0-9]/.test(password)) score++; // chiffre
+    if (/[^A-Za-z0-9]/.test(password)) score++; // caractère spécial
+
+    // Afficher le niveau de force
+    const levels = [
+        { label: 'Très faible', color: '#ff4444', width: '20%' },
+        { label: 'Faible',      color: '#ff8800', width: '40%' },
+        { label: 'Moyen',       color: '#ffcc00', width: '60%' },
+        { label: 'Fort',        color: '#88cc00', width: '80%' },
+        { label: 'Très fort',   color: '#00cc44', width: '100%' },
+    ];
+
+    const level = levels[Math.min(score, 4)];
+    strengthFill.style.width      = level.width;
+    strengthFill.style.background = level.color;
+    strengthLabel.textContent     = level.label;
+    strengthLabel.style.color     = level.color;
+});
+
+/**
+ * Vérification de correspondance des mots de passe en temps réel
+ */
+document.getElementById('input-confirm-password')?.addEventListener('input', function() {
+    const password        = document.getElementById('input-password').value;
+    const confirmPassword = this.value;
+    const matchEl         = document.getElementById('password-match');
+
+    if (!matchEl) return;
+
+    if (confirmPassword.length === 0) {
+        matchEl.style.display = 'none';
+        return;
+    }
+
+    matchEl.style.display = 'block';
+
+    if (password === confirmPassword) {
+        matchEl.textContent = '✅ Les mots de passe correspondent';
+        matchEl.style.color = '#00cc44';
+    } else {
+        matchEl.textContent = '❌ Les mots de passe ne correspondent pas';
+        matchEl.style.color = '#ff4444';
+    }
+});
+</script>

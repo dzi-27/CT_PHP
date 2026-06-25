@@ -1,4 +1,4 @@
-/* Container principal */
+&/* Container principal */
 .chat-container {
     display: flex;
     height: calc(100vh - 80px);
@@ -193,7 +193,7 @@
 }
 
 .message.sent .message-content {
-    background: #007bff;
+    background: var(--violet);
     color: white;
 }
 

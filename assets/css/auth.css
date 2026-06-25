@@ -1,1 +1,8 @@
 /* [assets/css/auth.css] — TODO */
+.auth-container {
+    background: var(--blanc);
+    padding: 2rem;
+    border-radius: 10px;
+    border: 1px solid var(--violet);
+    border-radius: 5px;
+}

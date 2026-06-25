@@ -1,1 +1,18 @@
 /* [assets/css/profile.css] — TODO */
+.profile-header {
+    padding: 20px;
+    background: var(--blanc);
+}
+#avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid var(--bleu-clair);
+    object-fit: cover;
+}
+
+.btn-upload {
+    margin-top: 10px;
+    background: var(--violet);
+    color: var(--blanc);
+}

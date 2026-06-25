@@ -3,9 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Réseau Social</title>
+  <title>LinkUP</title>
+
+  <link rel="stylesheet" href="assets/css/profile.css">
+  <link rel="stylesheet" href="assets/css/feed.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <link rel="stylesheet" href="assets/css/chat.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+
 </head>
+
+
 <body>
   <!-- [index.html] — TODO -->
+   <header>
+      <nav>
+        <button onclick="chargerPage('accueil')">Accueil</button>
+   
+        <button onclick="chargerPage('profile')">Profil</button>
+    
+        <button onclick="chargerPage('amis')">Amis</button>
+
+        <button onclick="chargerPage('message')">Message</button>
+
+        <button onclick="chargerPage('connexion')">Connexion</button>
+    
+        <button onclick="chargerPage('barre_de_navigation')">Barre de Navigation</button>
+    
+        <button onclick="chargerPage('inscription')">Inscription</button>
+    
+        <button onclick="chargerPage('password-reset')">Mot de Passe oublié ?</button>
+    
+      </nav>
+   </header>
+   <main id="app"> <!--Change d'onglet sans recharger -->
+
+   <h1>LinkUP </h1><b></b>
+   <h2>Bienvenu sur LinkUP</h2>
+   <p>Sélectionner un onglets dans le menu</p>
+   </main>
+   <script src="js/admin.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/feed.js"></script>
+<script src="js/friends.js"></script>
+<script src="js/navbar.js"></script>
+<script src="js/profile.js"></script>
+
+   <img src="" alt="">
+   
+   
 </body>
 </html>

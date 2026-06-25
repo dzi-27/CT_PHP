@@ -114,7 +114,7 @@
     transition: all 0.3s;
 }
 
-.btn-add { background: #007bff; color: white; }
+.btn-add { background: var(--bleu-clair); color: white; }
 .btn-add:hover { background: #0056b3; transform: scale(1.05); }
 
 .btn-pending { background: #ffc107; color: #333; cursor: not-allowed; }

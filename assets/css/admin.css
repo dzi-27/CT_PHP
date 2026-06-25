@@ -1,1 +1,15 @@
 /* [assets/css/admin.css] — TODO */
+.admin-container {
+    background: var(--blanc);
+    padding: 20px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: var(--violet);
+    color: var(--blanc);
+    padding: 10px;
+}

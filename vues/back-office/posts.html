@@ -1,11 +1,95 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Réseau Social</title>
-</head>
-<body>
-  <!-- [vues/back-office/posts.html] — TODO -->
-</body>
-</html>
+<!-- vues/back-office/posts.html -->
+<!--
+    Page de modération des publications.
+    Permet de consulter et supprimer les posts.
+    La liste est chargée dynamiquement par admin.js
+    via api/admin/get-posts.php.
+    
+    Accessible : Admin + Modérateur
+-->
+
+<div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="admin-sidebar-header">
+            <span class="admin-sidebar-logo">🛡️ Admin</span>
+            <div class="admin-user-info">
+                <span id="admin-prenom"></span>
+                <span id="admin-role" class="badge"></span>
+            </div>
+        </div>
+        <nav class="admin-nav">
+            <a href="#/admin/dashboard" class="admin-nav-link" data-route="/admin/dashboard">
+                📊 Dashboard
+            </a>
+            <a href="#/admin/users" class="admin-nav-link" data-route="/admin/users">
+                👥 Utilisateurs
+            </a>
+            <a href="#/admin/posts" class="admin-nav-link active" data-route="/admin/posts">
+                📝 Publications
+            </a>
+            <a href="#/admin/moderators" class="admin-nav-link" data-route="/admin/moderators" id="menu-roles">
+                🔑 Gestion des rôles
+            </a>
+        </nav>
+        <button id="btn-admin-logout" class="btn btn-logout admin-logout">
+            🚪 Déconnexion
+        </button>
+    </aside>
+
+    <!-- Zone de contenu -->
+    <main class="admin-content">
+
+        <!-- En-tête -->
+        <div class="admin-page-header">
+            <h1 class="admin-page-title">📝 Modération des publications</h1>
+            <p class="admin-page-subtitle">
+                <span id="posts-count">--</span> publications au total
+            </p>
+        </div>
+
+        <!-- Barre de recherche -->
+        <div class="admin-toolbar">
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="search-posts"
+                    class="form-input"
+                    placeholder="🔍 Rechercher par auteur ou contenu..."
+                >
+            </div>
+        </div>
+
+        <!-- Message de chargement -->
+        <div id="posts-loading" class="loading-message">
+            Chargement des publications...
+        </div>
+
+        <!-- Message si aucun résultat -->
+        <div id="posts-empty" class="empty-message" style="display:none;">
+            Aucune publication trouvée.
+        </div>
+
+        <!-- Tableau des posts — rempli par admin.js -->
+        <div class="admin-table-wrapper">
+            <table class="admin-table" id="posts-table" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Auteur</th>
+                        <th>Contenu</th>
+                        <th>Image</th>
+                        <th>Likes</th>
+                        <th>Commentaires</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <!-- Rempli dynamiquement par admin.js -->
+                <tbody id="posts-tbody"></tbody>
+            </table>
+        </div>
+
+    </main>
+
+</div>

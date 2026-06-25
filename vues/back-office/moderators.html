@@ -1,11 +1,109 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Réseau Social</title>
-</head>
-<body>
-  <!-- [vues/back-office/moderators.html] — TODO -->
-</body>
-</html>
+<!-- vues/back-office/moderators.html -->
+<!--
+    Page de gestion des rôles.
+    Permet d'attribuer ou révoquer les rôles Modérateur et Admin.
+
+    ACCÈS : Administrateur UNIQUEMENT.
+    admin.js vérifie le rôle et redirige les Modérateurs
+    vers le dashboard s'ils essaient d'accéder à cette page.
+-->
+
+<div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="admin-sidebar-header">
+            <span class="admin-sidebar-logo">🛡️ Admin</span>
+            <div class="admin-user-info">
+                <span id="admin-prenom"></span>
+                <span id="admin-role" class="badge"></span>
+            </div>
+        </div>
+        <nav class="admin-nav">
+            <a href="#/admin/dashboard" class="admin-nav-link" data-route="/admin/dashboard">
+                📊 Dashboard
+            </a>
+            <a href="#/admin/users" class="admin-nav-link" data-route="/admin/users">
+                👥 Utilisateurs
+            </a>
+            <a href="#/admin/posts" class="admin-nav-link" data-route="/admin/posts">
+                📝 Publications
+            </a>
+            <a href="#/admin/moderators" class="admin-nav-link active" data-route="/admin/moderators" id="menu-roles">
+                🔑 Gestion des rôles
+            </a>
+        </nav>
+        <button id="btn-admin-logout" class="btn btn-logout admin-logout">
+            🚪 Déconnexion
+        </button>
+    </aside>
+
+    <!-- Zone de contenu -->
+    <main class="admin-content">
+
+        <!-- En-tête -->
+        <div class="admin-page-header">
+            <h1 class="admin-page-title">🔑 Gestion des rôles</h1>
+            <p class="admin-page-subtitle">
+                Attribuer ou révoquer les rôles Modérateur et Administrateur
+            </p>
+        </div>
+
+        <!-- Avertissement Admin only -->
+        <div class="alert alert-warning">
+            ⚠️ Cette page est réservée aux Administrateurs.
+            Les modifications de rôles sont irréversibles sans intervention manuelle.
+        </div>
+
+        <!-- Barre de recherche -->
+        <div class="admin-toolbar">
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="search-roles"
+                    class="form-input"
+                    placeholder="🔍 Rechercher un utilisateur..."
+                >
+            </div>
+
+            <!-- Filtre par rôle -->
+            <div class="filter-box">
+                <select id="filter-role" class="form-input">
+                    <option value="">Tous les rôles</option>
+                    <option value="user">Utilisateurs</option>
+                    <option value="moderator">Modérateurs</option>
+                    <option value="admin">Administrateurs</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Message de chargement -->
+        <div id="roles-loading" class="loading-message">
+            Chargement des utilisateurs...
+        </div>
+
+        <!-- Message si aucun résultat -->
+        <div id="roles-empty" class="empty-message" style="display:none;">
+            Aucun utilisateur trouvé.
+        </div>
+
+        <!-- Tableau des rôles — rempli par admin.js -->
+        <div class="admin-table-wrapper">
+            <table class="admin-table" id="roles-table" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Avatar</th>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Rôle actuel</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <!-- Rempli dynamiquement par admin.js -->
+                <tbody id="roles-tbody"></tbody>
+            </table>
+        </div>
+
+    </main>
+
+</div>

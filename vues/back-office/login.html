@@ -1,11 +1,71 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Réseau Social</title>
-</head>
-<body>
-  <!-- [vues/back-office/login.html] — TODO -->
-</body>
-</html>
+<!-- vues/back-office/login.html -->
+<!--
+    Page de connexion du back-office admin.
+    Distincte de la page login client :
+    - URL différente : #/admin/login
+    - Appelle api/admin/login.php et non api/auth/login.php
+    - Réservée aux rôles Admin et Modérateur
+-->
+
+<div class="admin-login-container">
+    <div class="admin-login-card">
+
+        <!-- En-tête -->
+        <div class="admin-login-header">
+            <div class="admin-login-icon">🛡️</div>
+            <h1 class="admin-login-title">Administration</h1>
+            <p class="admin-login-subtitle">LinkUP — Accès réservé</p>
+        </div>
+
+        <!-- Message d'erreur -->
+        <div id="error-message" class="alert alert-error" style="display:none;"></div>
+
+        <!-- Message de succès -->
+        <div id="success-message" class="alert alert-success" style="display:none;"></div>
+
+        <!-- Formulaire de connexion admin -->
+        <form id="form-admin-login">
+
+            <div class="form-group">
+                <label class="form-label" for="input-admin-email">
+                    Adresse email
+                </label>
+                <input
+                    type="email"
+                    id="input-admin-email"
+                    class="form-input"
+                    placeholder="admin@reseau-social.com"
+                    required
+                    autocomplete="email"
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="input-admin-password">
+                    Mot de passe
+                </label>
+                <input
+                    type="password"
+                    id="input-admin-password"
+                    class="form-input"
+                    placeholder="Votre mot de passe"
+                    required
+                    autocomplete="current-password"
+                >
+            </div>
+
+            <button type="submit" id="btn-admin-login" class="btn btn-primary btn-full">
+                🔐 Accéder au panneau admin
+            </button>
+
+        </form>
+
+        <!-- Lien retour vers le site client -->
+        <div class="admin-login-footer">
+            <a href="#/login" class="auth-link">
+                ← Retour au site
+            </a>
+        </div>
+
+    </div>
+</div>

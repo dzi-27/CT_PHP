@@ -1,49 +1,31 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amis</title>
-    <link rel="stylesheet" href="../../assets/css/feed.css">
-    <link rel="stylesheet" href="../../assets/css/components.css">
-</head>
-<body>
-    <div id="navbar"></div>
+<!-- vues/clients/friends.html -->
+<div class="friends-container">
+    <h1>Gestion des amis</h1>
     
-    <main class="container">
-        <div class="friends-container">
-            <h1>Gestion des amis</h1>
-            
-            <!-- 3 onglets -->
-            <div class="friends-tabs">
-                <button class="tab-btn active" data-tab="find" id="tab-find-btn">
-                    🔍 Trouver des amis
-                </button>
-                <button class="tab-btn" data-tab="invitations" id="tab-invitations-btn">
-                    📩 Invitations reçues
-                    <span id="invitations-badge" class="badge" style="display:none;">0</span>
-                </button>
-                <button class="tab-btn" data-tab="friends" id="tab-friends-btn">
-                    👥 Mes amis
-                </button>
-            </div>
-            
-            <!-- Conteneurs des onglets -->
-            <div id="tab-find" class="tab-content active">
-                <!-- Rempli dynamiquement par friends.js -->
-            </div>
-            
-            <div id="tab-invitations" class="tab-content" style="display:none;">
-                <!-- Rempli dynamiquement par friends.js -->
-            </div>
-            
-            <div id="tab-friends" class="tab-content" style="display:none;">
-                <!-- Rempli dynamiquement par friends.js -->
-            </div>
-        </div>
-    </main>
+    <!-- 3 onglets -->
+    <div class="friends-tabs">
+        <button class="tab-btn active" data-tab="find">
+            🔍 Trouver des amis
+        </button>
+        <button class="tab-btn" data-tab="invitations">
+            📩 Invitations reçues
+            <span id="invitations-badge" class="badge" style="display:none;">0</span>
+        </button>
+        <button class="tab-btn" data-tab="friends">
+            👥 Mes amis
+        </button>
+    </div>
     
-    <script src="../../assets/js/navbar.js"></script>
-    <script src="../../assets/js/friends.js"></script>
-</body>
-</html>
+    <!-- Conteneurs des onglets -->
+    <div id="tab-find" class="tab-content active">
+        <!-- Rempli dynamiquement par friends.js -->
+    </div>
+    
+    <div id="tab-invitations" class="tab-content" style="display:none;">
+        <!-- Rempli dynamiquement par friends.js -->
+    </div>
+    
+    <div id="tab-friends" class="tab-content" style="display:none;">
+        <!-- Rempli dynamiquement par friends.js -->
+    </div>
+</div>

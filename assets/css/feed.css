@@ -1,3 +1,4 @@
+HEAD
 /* [assets/css/feed.css] — TODO */
 /* Styles pour la gestion des amis */
 .friends-container {
@@ -141,3 +142,4 @@
     flex-direction: column;
     gap: 10px;
 }
+

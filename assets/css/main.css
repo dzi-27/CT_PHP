@@ -1,3 +1,4 @@
+ HEAD
 /* Définition de la charte graphique */
 :root {
     --bleu-clair: #87CEEB;
@@ -52,3 +53,4 @@ body {
     border-radius: 5px;
     cursor: pointer;
 }
+

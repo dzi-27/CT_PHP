@@ -1,11 +1,114 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Réseau Social</title>
-</head>
-<body>
-  <!-- [vues/back-office/dashboard.html] — TODO -->
-</body>
-</html>
+<!-- vues/back-office/dashboard.html -->
+<!--
+    Tableau de bord principal du back-office.
+    Affiche les statistiques du réseau social.
+    Les données sont chargées dynamiquement par admin.js
+    via api/admin/get-stats.php.
+-->
+
+<div class="admin-layout">
+
+    <!-- Sidebar de navigation -->
+    <aside class="admin-sidebar">
+        <div class="admin-sidebar-header">
+            <span class="admin-sidebar-logo">🛡️ Admin</span>
+            <!-- Nom et rôle de l'admin connecté — rempli par admin.js -->
+            <div class="admin-user-info">
+                <span id="admin-prenom"></span>
+                <span id="admin-role" class="badge"></span>
+            </div>
+        </div>
+
+        <!-- Menu de navigation -->
+        <nav class="admin-nav">
+            <a href="#/admin/dashboard" class="admin-nav-link active" data-route="/admin/dashboard">
+                📊 Dashboard
+            </a>
+            <a href="#/admin/users" class="admin-nav-link" data-route="/admin/users">
+                👥 Utilisateurs
+            </a>
+            <a href="#/admin/posts" class="admin-nav-link" data-route="/admin/posts">
+                📝 Publications
+            </a>
+            <!-- Visible uniquement pour les Admins — caché par admin.js pour les Modérateurs -->
+            <a href="#/admin/moderators" class="admin-nav-link" data-route="/admin/moderators" id="menu-roles">
+                🔑 Gestion des rôles
+            </a>
+        </nav>
+
+        <!-- Bouton déconnexion -->
+        <button id="btn-admin-logout" class="btn btn-logout admin-logout">
+            🚪 Déconnexion
+        </button>
+    </aside>
+
+    <!-- Zone de contenu principale -->
+    <main class="admin-content">
+
+        <!-- En-tête de page -->
+        <div class="admin-page-header">
+            <h1 class="admin-page-title">📊 Tableau de bord</h1>
+            <p class="admin-page-subtitle">Vue d'ensemble du réseau social</p>
+        </div>
+
+        <!-- Cards de statistiques — remplies par admin.js -->
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-card-icon">👥</div>
+                <div class="stat-card-info">
+                    <span class="stat-card-value" id="stat-total-users">--</span>
+                    <span class="stat-card-label">Utilisateurs inscrits</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon">📝</div>
+                <div class="stat-card-info">
+                    <span class="stat-card-value" id="stat-total-posts">--</span>
+                    <span class="stat-card-label">Publications</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon">💬</div>
+                <div class="stat-card-info">
+                    <span class="stat-card-value" id="stat-total-comments">--</span>
+                    <span class="stat-card-label">Commentaires</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon">🆕</div>
+                <div class="stat-card-info">
+                    <span class="stat-card-value" id="stat-users-today">--</span>
+                    <span class="stat-card-label">Nouveaux aujourd'hui</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon">🔥</div>
+                <div class="stat-card-info">
+                    <span class="stat-card-value" id="stat-posts-today">--</span>
+                    <span class="stat-card-label">Posts aujourd'hui</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-card-icon">👤</div>
+                <div class="stat-card-info">
+                    <span class="stat-card-value" id="stat-online-users">--</span>
+                    <span class="stat-card-label">Utilisateurs en ligne</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Message de chargement -->
+        <div id="dashboard-loading" class="loading-message">
+            Chargement des statistiques...
+        </div>
+
+    </main>
+
+</div>

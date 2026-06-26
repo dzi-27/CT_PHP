@@ -1,11 +1,42 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Réseau Social</title>
-</head>
-<body>
-  <!-- [vues/clients/profile.html] — TODO -->
-</body>
-</html>
+
+<section id="profile-page">
+
+  <!-- Affichage du profil -->
+  <div class="profile-display">
+    <img id="profile-avatar" src="assets/images/default-avatar.png" alt="Avatar">
+    <h2 id="profile-name"></h2>
+    <p id="profile-bio"></p>
+  </div>
+
+  <!-- Boutons pour ouvrir chaque section -->
+  <div class="profile-actions">
+    <button id="btn-edit-info">Modifier mes infos</button>
+    <button id="btn-edit-avatar">Modifier ma photo</button>
+    <button id="btn-edit-password">Modifier mon mot de passe</button>
+  </div>
+
+  <!-- Section 1 : Infos personnelles (cachée par défaut) -->
+  <div id="section-info" class="profile-section" style="display:none;">
+    <input type="text" id="input-prenom" placeholder="Prénom">
+    <input type="text" id="input-nom" placeholder="Nom">
+    <input type="email" id="input-email" placeholder="Email">
+    <textarea id="input-bio" placeholder="Bio"></textarea>
+    <button id="btn-save-info">Enregistrer</button>
+  </div>
+
+  <!-- Section 2 : Photo de profil (cachée par défaut) -->
+  <div id="section-avatar" class="profile-section" style="display:none;">
+    <input type="file" id="input-avatar" accept="image/*">
+    <img id="avatar-preview" src="" alt="">
+    <button id="btn-save-avatar">Enregistrer la photo</button>
+  </div>
+
+  <!-- Section 3 : Mot de passe (cachée par défaut) -->
+  <div id="section-password" class="profile-section" style="display:none;">
+    <input type="password" id="old-password" placeholder="Ancien mot de passe">
+    <input type="password" id="new-password" placeholder="Nouveau mot de passe">
+    <input type="password" id="confirm-password" placeholder="Confirmer le mot de passe">
+    <button id="btn-save-password">Changer le mot de passe</button>
+  </div>
+
+</section>

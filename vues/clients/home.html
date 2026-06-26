@@ -1,11 +1,16 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Réseau Social</title>
-</head>
-<body>
-  <!-- [vues/clients/home.html] — TODO -->
-</body>
-</html>
+
+<section id="feed-page">
+
+  <!-- Zone de création de post -->
+  <div class="post-creation">
+    <textarea id="post-content" placeholder="Quoi de neuf ?"></textarea>
+    <input type="file" id="post-image" accept="image/*">
+    <button id="btn-create-post">Publier</button>
+  </div>
+
+  <!-- Conteneur du fil d'actualité, rempli dynamiquement par feed.js -->
+  <div id="feed-container">
+    <!-- les cartes de posts seront injectées ici en JS -->
+  </div>
+
+</section>

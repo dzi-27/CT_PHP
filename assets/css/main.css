@@ -1,56 +1,140 @@
- HEAD
-/* Définition de la charte graphique */
+/* ==========================================================================
+   1. VARIABLES GLOBALES (Violet et Blanc uniquement)
+   ========================================================================== */
 :root {
-    --bleu-clair: #87CEEB;
-    --violet: #8A2BE2;
-    --blanc: #FFFFFF;
-    --fond: #f4f4f9;
-    --vert: #28a745;
-    --rouge: #dc3545;
-    --gris: #6c757d;
+    --primary: #8A2BE2; /* Violet */
+    --bg: #FFFFFF;      /* Blanc */
+    --text: #333333;
+}
+
+/* ==========================================================================
+   2. RESET DE BASE
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    background-color: var(--fond);
     font-family: sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
 }
 
-/* --- Boutons et Tabs --- */
-.tab-btn {
-    padding: 10px 20px;
-    border: none;
-    background: #e0e0e0;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: all 0.3s;
-}
-
-.tab-btn.active {
-    background-color: var(--violet); /* Correction : utilise votre variable */
-    color: var(--blanc);
-}
-
-/* --- Friend Cards --- */
-.friend-card {
+/* ==========================================================================
+   3. BARRE DE NAVIGATION
+   ========================================================================== */
+header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 70px;
+    background-color: var(--primary);
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 15px;
-    background: var(--blanc);
-    border-radius: 10px;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 0 5%;
+    z-index: 1000;
 }
 
-/* --- Actions (Boutons avec variables) --- */
-.btn-chat { background: var(--bleu-clair); color: var(--blanc); }
-.btn-remove, .btn-reject { background: var(--rouge); color: var(--blanc); }
-.btn-accept { background: var(--vert); color: var(--blanc); }
-.btn-invite { background: var(--bleu-clair); color: var(--blanc); }
+.logo {
+    color: var(--bg);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
 
-.friend-actions button {
-    padding: 5px 10px;
+nav {
+    display: flex;
+    gap: 10px;
+}
+
+nav button {
+    background: transparent;
+    border: 1px solid var(--bg);
+    color: var(--bg);
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+nav button:hover {
+    background: var(--bg);
+    color: var(--primary);
+}
+
+/* ==========================================================================
+   4. SECTION HERO (Bannière avec Image de fond corrigée)
+   ========================================================================== */
+main {
+    padding-top: 70px;
+}
+
+.hero {
+    height: 60vh;
+    /* Chemin absolu pour garantir l'affichage de background-social.jpg */
+    background: linear-gradient(rgba(138, 43, 226, 0.85), rgba(138, 43, 226, 0.85)), 
+                url('/CT_PHP/assets/images/background-social.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--bg);
+    padding: 20px;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+}
+
+/* ==========================================================================
+   5. GRILLE FONCTIONNALITÉS
+   ========================================================================== */
+.features-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 50px 5%;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.feature-box {
+    width: 30%;
+    min-width: 250px;
+    text-align: center;
+    padding: 30px;
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+}
+
+.feature-box h3 {
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+/* ==========================================================================
+   6. BOUTONS
+   ========================================================================== */
+.btn {
+    background: var(--bg);
+    color: var(--primary);
+    padding: 15px 30px;
     border: none;
     border-radius: 5px;
+    font-weight: bold;
     cursor: pointer;
+    font-size: 1rem;
 }
-

@@ -1,67 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LinkUP</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkUP</title>
 
-  <link rel="stylesheet" href="assets/css/components.css">
-  <link rel="stylesheet" href="assets/css/auth.css">
-  <link rel="stylesheet" href="assets/css/feed.css">
-  <link rel="stylesheet" href="assets/css/chat.css">
-  <link rel="stylesheet" href="assets/css/profile.css">
-  <link rel="stylesheet" href="assets/css/admin.css">
-  <link rel="stylesheet" href="assets/css/main.css">
+    <!-- main.css EN PREMIER — il définit les variables CSS utilisées partout -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
+    <link rel="stylesheet" href="assets/css/feed.css">
+    <link rel="stylesheet" href="assets/css/chat.css">
+    <link rel="stylesheet" href="assets/css/profile.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
 </head>
-
 <body>
-   <header>
-      <div class="logo">LinkUP</div>
-      <nav>
-        <button onclick="chargerPage('accueil')">Accueil</button>
-        <button onclick="chargerPage('profile')">Profil</button>
-        <button onclick="chargerPage('amis')">Amis</button>
-        <button onclick="chargerPage('message')">Message</button>
-        <button onclick="chargerPage('connexion')">Connexion</button>
-        <button onclick="chargerPage('barre_de_navigation')">Barre de Navigation</button>
-        <button onclick="chargerPage('inscription')">Inscription</button>
-        <button onclick="chargerPage('password-reset')">Mot de Passe oublié ?</button>
-      </nav>
-   </header>
 
-   <main id="app"> 
-      
-      <section class="hero">
-          <h1>LinkUP : Connectez-vous enfin</h1>
-          <p>La plateforme qui réunit tous vos échanges en un seul endroit.</p>
-          <button class="btn" onclick="chargerPage('inscription')">S'INSCRIRE GRATUITEMENT</button>
-      </section>
+    <!-- Navbar injectée ici par navbar.js -->
+    <div id="navbar"></div>
 
-      <section class="features-container">
-          <div class="feature-box">
-              <h3>Profil Personnalisé</h3>
-              <p>Gérez vos informations et votre identité en toute simplicité.</p>
-          </div>
-          <div class="feature-box">
-              <h3>Réseau Social</h3>
-              <p>Restez en contact constant avec vos amis et votre communauté.</p>
-          </div>
-          <div class="feature-box">
-              <h3>Messagerie Instantanée</h3>
-              <p>Échangez en temps réel avec vos contacts sans aucune latence.</p>
-          </div>
-      </section>
+    <!-- Toutes les vues sont injectées ici par app.js -->
+    <div id="app"></div>
 
-   </main>
+    <!-- JS — api.js EN PREMIER, app.js EN DERNIER -->
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/navbar.js"></script>
+    <script src="assets/js/feed.js"></script>
+    <script src="assets/js/profile.js"></script>
+    <script src="assets/js/friends.js"></script>
+    <script src="assets/js/chat.js"></script>
+    <script src="assets/js/admin.js"></script>
+    <!-- app.js EN DERNIER — il démarre le routeur une fois tous les modules chargés -->
+    <script src="assets/js/app.js"></script>
 
-   <script src="js/admin.js"></script>
-   <script src="js/api.js"></script>
-   <script src="js/app.js"></script>
-   <script src="js/auth.js"></script>
-   <script src="js/chat.js"></script>
-   <script src="js/feed.js"></script>
-   <script src="js/friends.js"></script>
-   <script src="js/navbar.js"></script>
-   <script src="js/profile.js"></script>
 </body>
 </html>

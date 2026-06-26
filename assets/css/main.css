@@ -1,10 +1,25 @@
 /* ==========================================================================
-   1. VARIABLES GLOBALES (Violet et Blanc uniquement)
+   main.css — Feuille de style globale
+   Variables CSS, reset, typographie et navbar.
+   À charger EN PREMIER dans index.html car tous les autres CSS
+   dépendent des variables définies ici dans :root.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. VARIABLES GLOBALES
    ========================================================================== */
 :root {
-    --primary: #8A2BE2; /* Violet */
-    --bg: #FFFFFF;      /* Blanc */
-    --text: #333333;
+    --primary:   #8A2BE2;  /* Violet principal */
+    --secondary: #87CEEB;  /* Bleu ciel — utilisé dans chat, profile, admin */
+    --bg:        #FFFFFF;  /* Fond blanc */
+    --white:     #FFFFFF;  /* Alias de --bg utilisé dans chat/profile/admin */
+    --text:      #333333;  /* Texte principal */
+    --muted:     #777777;  /* Texte secondaire */
+    --border:    #DDDDDD;  /* Couleur des bordures */
+    --danger:    #E74C3C;  /* Rouge pour les actions dangereuses */
+    --success:   #27AE60;  /* Vert pour les succès */
+    --radius:    8px;      /* Border-radius standard */
+    --shadow:    0 2px 8px rgba(0, 0, 0, 0.1); /* Ombre standard */
 }
 
 /* ==========================================================================
@@ -17,124 +32,161 @@
 }
 
 body {
-    font-family: sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--bg);
     color: var(--text);
     line-height: 1.6;
 }
 
+a {
+    text-decoration: none;
+    color: var(--primary);
+}
+
+a:hover {
+    opacity: 0.8;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
 /* ==========================================================================
    3. BARRE DE NAVIGATION
    ========================================================================== */
-header {
+.navbar {
     position: fixed;
     top: 0;
     width: 100%;
-    height: 70px;
+    height: 60px;
     background-color: var(--primary);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 5%;
     z-index: 1000;
+    box-shadow: var(--shadow);
 }
 
-.logo {
-    color: var(--bg);
-    font-size: 1.5rem;
+.navbar-brand .navbar-logo {
+    color: var(--white);
+    font-size: 1.4rem;
     font-weight: bold;
+    text-decoration: none;
 }
 
-nav {
+.navbar-links {
     display: flex;
-    gap: 10px;
+    gap: 8px;
+    align-items: center;
 }
 
-nav button {
-    background: transparent;
-    border: 1px solid var(--bg);
-    color: var(--bg);
-    padding: 8px 12px;
-    border-radius: 4px;
-    cursor: pointer;
+.nav-link {
+    color: var(--white);
+    padding: 6px 12px;
+    border-radius: var(--radius);
     font-size: 0.9rem;
+    text-decoration: none;
+    transition: background 0.2s;
+    position: relative;
 }
 
-nav button:hover {
-    background: var(--bg);
-    color: var(--primary);
+.nav-link:hover,
+.nav-link.active {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.navbar-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--white);
+    object-fit: cover;
+}
+
+.navbar-prenom {
+    color: var(--white);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.btn-logout {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    border: 1px solid var(--white);
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+}
+
+.btn-logout:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+/* Badge de notification (amis, messages) */
+.badge {
+    display: inline-block;
+    background: var(--danger);
+    color: var(--white);
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
 }
 
 /* ==========================================================================
-   4. SECTION HERO (Bannière avec Image de fond corrigée)
+   4. LAYOUT PRINCIPAL
    ========================================================================== */
-main {
-    padding-top: 70px;
+/* Compenser la hauteur de la navbar fixe */
+#app {
+    padding-top: 60px;
+    min-height: 100vh;
 }
 
-.hero {
-    height: 60vh;
-    /* Chemin absolu pour garantir l'affichage de background-social.jpg */
-    background: linear-gradient(rgba(138, 43, 226, 0.85), rgba(138, 43, 226, 0.85)), 
-                url('/CT_PHP/assets/images/background-social.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: var(--bg);
+.container {
+    max-width: 900px;
+    margin: 0 auto;
     padding: 20px;
 }
 
-.hero h1 {
-    font-size: 3rem;
-    margin-bottom: 15px;
-}
-
-.hero p {
-    font-size: 1.2rem;
-    margin-bottom: 25px;
-}
-
 /* ==========================================================================
-   5. GRILLE FONCTIONNALITÉS
+   5. UTILITAIRES
    ========================================================================== */
-.features-container {
-    display: flex;
-    justify-content: space-around;
-    padding: 50px 5%;
-    gap: 20px;
-    flex-wrap: wrap;
-}
+.hidden        { display: none !important; }
+.text-center   { text-align: center; }
+.text-muted    { color: var(--muted); font-size: 0.85rem; }
+.mt-1          { margin-top: 8px; }
+.mt-2          { margin-top: 16px; }
+.mb-1          { margin-bottom: 8px; }
+.mb-2          { margin-bottom: 16px; }
 
-.feature-box {
-    width: 30%;
-    min-width: 250px;
+/* Messages de chargement et états vides */
+.loading-message {
     text-align: center;
-    padding: 30px;
-    border: 1px solid var(--primary);
-    border-radius: 8px;
+    color: var(--muted);
+    padding: 20px;
+    font-style: italic;
 }
 
-.feature-box h3 {
-    color: var(--primary);
-    margin-bottom: 10px;
-}
-
-/* ==========================================================================
-   6. BOUTONS
-   ========================================================================== */
-.btn {
-    background: var(--bg);
-    color: var(--primary);
-    padding: 15px 30px;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 1rem;
+.empty-message {
+    text-align: center;
+    color: var(--muted);
+    padding: 40px;
 }

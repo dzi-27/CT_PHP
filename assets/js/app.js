@@ -154,23 +154,6 @@ function initFriends() { console.log('Module Friends chargé'); }
 function initChat()    { console.log('Module Chat chargé');    }
 function initNavbar()  { console.log('Navbar chargée');        }
 
-// Fonction de navigation sécurisée
-function LoadPage(pageName) {
-    //on vérifie si l'utilisateur tente d'accéder au profil
-    if (pageName == 'profil') {
-        // On vérifie dans le stockage local si un utilisateur est inscrit
-        const estInscrit = LocalStorage.getItem('isRegistered');
-        if (estInscrit !== 'true') {
-            alert("Vous devez vous inscrire pour accéder à votre profile !") ;
-            LoadPage('inscription'); //on le redirige vers l'inscription
-            return;
-        }
-    }
-    if(pageName == 'profile') initProfile();
-    if
-
-}
-
 // ─── ÉCOUTE DES CHANGEMENTS DE ROUTE ─────────────────────────────────────────
 /**
  * On écoute deux événements :

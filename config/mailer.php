@@ -1,85 +1,83 @@
 <?php
 /**
- * Configuration de l'envoi d'emails HTML.
+ * config/mailer.php
  * 
- * Ce fichier expose une fonction sendMail() utilisée par :
- *   - api/auth/register.php      → email de bienvenue
- *   - api/auth/forgot-password.php → email de reset mot de passe
- * 
- * On utilise la fonction mail() native de PHP pour rester
- * en PHP natif comme exigé par le sujet.
- * Si vous voulez utiliser PHPMailer (SMTP Gmail), c'est possible
- * mais nécessite une installation via Composer.
+ * Configuration de l'envoi d'emails HTML via PHPMailer + SMTP.
+ * Utilise les identifiants SMTP définis dans .env
  */
 
-// Chargement des variables d'environnement depuis .env
+// Charger PHPMailer installé via Composer
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Charger les variables d'environnement
 $env = parse_ini_file(__DIR__ . '/../.env');
 
 /**
- * Fonction sendMail()
+ * sendMail()
  * 
- * @param string $to      Adresse email du destinataire
+ * @param string $to      Email du destinataire
  * @param string $subject Sujet de l'email
  * @param string $body    Contenu HTML de l'email
  * @return bool           true si envoyé, false sinon
- * 
- * Exemple d'utilisation :
- *   sendMail('user@example.com', 'Bienvenue !', '<h1>Bonjour</h1>');
  */
-function sendMail(string $to, string $subject, string $body): bool
-{
-    // Récupérer l'adresse d'expédition depuis .env
+function sendMail(string $to, string $subject, string $body): bool {
     global $env;
-    $from = $env['SMTP_FROM'] ?? 'noreply@reseau-social.com';
 
-    /**
-     * Headers de l'email
-     * On précise que c'est un email HTML (Content-Type: text/html)
-     * et on définit l'expéditeur.
-     */
-    $headers  = "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-    $headers .= "From: Reseau Social <{$from}>\r\n";
-    $headers .= "Reply-To: {$from}\r\n";
+    $mail = new PHPMailer(true);
 
-    // Envoi de l'email via la fonction mail() native PHP
-    $result = mail($to, $subject, $body, $headers);
+    try {
+        // Configuration SMTP
+        $mail->isSMTP();
+        $mail->Host       = $env['SMTP_HOST'];
+        $mail->SMTPAuth   = true;
+        $mail->Username   = $env['SMTP_USER'];
+        $mail->Password   = $env['SMTP_PASS'];
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = $env['SMTP_PORT'];
+        $mail->CharSet    = 'UTF-8';
 
-    return $result;
+        // Expéditeur et destinataire
+        $mail->setFrom($env['SMTP_FROM'], 'LinkUP');
+        $mail->addAddress($to);
+
+        // Contenu HTML
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $body;
+
+        $mail->send();
+        return true;
+
+    } catch (Exception $e) {
+        error_log('Erreur envoi email : ' . $mail->ErrorInfo);
+        return false;
+    }
 }
 
 /**
- * Fonction loadTemplate()
+ * loadTemplate()
  * 
- * Charge un template HTML depuis le dossier /templates/
- * et remplace les variables dynamiques dedans.
+ * Charge un template HTML et remplace les placeholders
  * 
- * @param string $templateFile  Nom du fichier template (ex: 'email-welcome.html')
- * @param array  $variables     Tableau clé => valeur à remplacer dans le template
- * @return string               Le HTML final avec les variables remplacées
- * 
- * Exemple d'utilisation :
- *   $html = loadTemplate('email-welcome.html', ['{{PRENOM}}' => 'Sean']);
+ * @param string $templateFile  Nom du fichier (ex: 'email-welcome.html')
+ * @param array  $variables     Tableau placeholder => valeur
+ * @return string               HTML avec les valeurs injectées
  */
-function loadTemplate(string $templateFile, array $variables = []): string
-{
-    // Chemin complet vers le fichier template
+function loadTemplate(string $templateFile, array $variables = []): string {
     $templatePath = __DIR__ . '/../templates/' . $templateFile;
 
-    // Vérifier que le template existe
     if (!file_exists($templatePath)) {
-        return '<p>Erreur : template email introuvable.</p>';
+        return '<p>Template introuvable.</p>';
     }
 
-    // Charger le contenu HTML du template
     $html = file_get_contents($templatePath);
 
-    // Remplacer chaque variable par sa valeur
-    // Ex: '{{PRENOM}}' sera remplacé par 'Sean' dans le HTML
     foreach ($variables as $placeholder => $value) {
         $html = str_replace($placeholder, $value, $html);
     }
 
     return $html;
 }
-?>

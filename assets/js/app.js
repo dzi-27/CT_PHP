@@ -6,9 +6,9 @@
  * SANS recharger la page, en utilisant le hash de l'URL.
  * 
  * Exemple :
- *   http://localhost/reseau-social/#/home    → charge la vue home
- *   http://localhost/reseau-social/#/chat    → charge la vue chat
- *   http://localhost/reseau-social/#/friends → charge la vue friends
+ *   http://localhost/CT_PHP/#/home    → charge la vue home
+ *   http://localhost/CT_PHP/#/chat    → charge la vue chat
+ *   http://localhost/CT_PHP/#/friends → charge la vue friends
  * 
  * Comment ça marche :
  *   1. L'utilisateur clique sur un lien
@@ -28,13 +28,13 @@
  *   - auth   : true = l'utilisateur doit être connecté pour accéder à cette route
  */
 const ROUTES = {
-    '/login':    { view: 'vues/clients/login.html',          init: initAuth,    auth: false },
-    '/register': { view: 'vues/clients/register.html',       init: initAuth,    auth: false },
-    '/reset':    { view: 'vues/clients/reset-password.html', init: initAuth,    auth: false },
-    '/home':     { view: 'vues/clients/home.html',           init: initFeed,    auth: true  },
-    '/profile':  { view: 'vues/clients/profile.html',        init: initProfile, auth: true  },
-    '/friends':  { view: 'vues/clients/friends.html',        init: initFriends, auth: true  },
-    '/chat':     { view: 'vues/clients/chat.html',           init: initChat,    auth: true  },
+    '/login':    { view: 'vues/clients/login.html',          init: () => initAuth(),    auth: false },
+    '/register': { view: 'vues/clients/register.html',       init: () => initAuth(),    auth: false },
+    '/reset':    { view: 'vues/clients/reset-password.html', init: () => initAuth(),    auth: false },
+    '/home':     { view: 'vues/clients/home.html',           init: () => initFeed(),    auth: true  },
+    '/profile':  { view: 'vues/clients/profile.html',        init: () => initProfile(), auth: true  },
+    '/friends':  { view: 'vues/clients/friends.html',        init: () => initFriends(), auth: true  },
+    '/chat':     { view: 'vues/clients/chat.html',           init: () => initChat(),    auth: true  },
 };
 
 // ─── ZONE D'AFFICHAGE PRINCIPALE ─────────────────────────────────────────────
@@ -102,6 +102,8 @@ async function loadView() {
         }
 
         // Initialiser le module JS de la vue
+        // On appelle via arrow function dans ROUTES pour toujours
+        // résoudre la fonction au moment de l'appel (pas au chargement).
         if (typeof config.init === 'function') {
             config.init();
         }
@@ -141,18 +143,27 @@ async function verifierSession() {
     }
 }
 
-// ─── FONCTIONS D'INITIALISATION DES MODULES ──────────────────────────────────
+// ─── GUARDS DES MODULES ───────────────────────────────────────────────────────
 /**
- * Ces fonctions sont définies dans leurs fichiers JS respectifs.
- * On les déclare ici en tant que fonctions vides par défaut
- * pour éviter les erreurs si un fichier JS n'est pas encore chargé.
+ * Ces guards vérifient si la fonction existe déjà (définie dans son
+ * fichier JS dédié). Si oui → on la laisse tranquille.
+ * Si non → on crée un fallback d'avertissement.
+ * 
+ * IMPORTANT : on utilise des guards et NON des déclarations function
+ * classiques, car une déclaration function est hoistée et écraserait
+ * la vraie fonction définie dans auth.js / feed.js / etc.
+ * 
+ * Ordre de chargement dans index.html :
+ *   api.js → auth.js → feed.js → friends.js → chat.js → navbar.js → app.js
+ * Donc quand app.js s'exécute, toutes les vraies fonctions sont déjà
+ * disponibles — les guards ne servent que de filet de sécurité.
  */
-function initAuth()    { console.log('Module Auth chargé');    }
-function initFeed()    { console.log('Module Feed chargé');    }
-function initProfile() { console.log('Module Profile chargé'); }
-function initFriends() { console.log('Module Friends chargé'); }
-function initChat()    { console.log('Module Chat chargé');    }
-function initNavbar()  { console.log('Navbar chargée');        }
+if (typeof initAuth    === 'undefined') window.initAuth    = function() { console.warn('⚠️ auth.js non chargé');    };
+if (typeof initFeed    === 'undefined') window.initFeed    = function() { console.warn('⚠️ feed.js non chargé');    };
+if (typeof initProfile === 'undefined') window.initProfile = function() { console.warn('⚠️ profile.js non chargé'); };
+if (typeof initFriends === 'undefined') window.initFriends = function() { console.warn('⚠️ friends.js non chargé'); };
+if (typeof initChat    === 'undefined') window.initChat    = function() { console.warn('⚠️ chat.js non chargé');    };
+if (typeof initNavbar  === 'undefined') window.initNavbar  = function() { console.warn('⚠️ navbar.js non chargé');  };
 
 // ─── ÉCOUTE DES CHANGEMENTS DE ROUTE ─────────────────────────────────────────
 /**

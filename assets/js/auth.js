@@ -1,4 +1,3 @@
-
 /**
  * Gestion de toute la logique JavaScript du module authentification.
  * 
@@ -106,6 +105,11 @@ function initLoginForm() {
  * Écoute la soumission et appelle l'API register.
  */
 function initRegisterForm() {
+    // Initialiser les interactions UX (toggle password, force, correspondance)
+    // IMPORTANT : doit être appelé ici car le <script> inline de register.html
+    // ne s'exécute pas quand la vue est injectée via innerHTML.
+    initRegisterUX();
+
     const form = document.getElementById('form-register');
     if (!form) return;
 
@@ -169,6 +173,107 @@ function initRegisterForm() {
             showError('register', 'Erreur réseau. Vérifiez votre connexion.');
         } finally {
             setLoading('btn-register', false);
+        }
+    });
+}
+
+/**
+ * initRegisterUX()
+ * 
+ * Gère les interactions visuelles du formulaire d'inscription :
+ * - Afficher / cacher le mot de passe
+ * - Indicateur de force du mot de passe
+ * - Vérification de correspondance des mots de passe en temps réel
+ * 
+ * Déplacé ici depuis le <script> inline de register.html car les scripts
+ * inline injectés via innerHTML ne s'exécutent PAS dans le navigateur.
+ */
+function initRegisterUX() {
+
+    // ── Toggle afficher/cacher mot de passe ───────────────────
+    function togglePasswordVisibility(inputId, btnId) {
+        const input = document.getElementById(inputId);
+        const btn   = document.getElementById(btnId);
+        if (!input || !btn) return;
+
+        if (input.type === 'password') {
+            input.type      = 'text';
+            btn.textContent = '🙈';
+        } else {
+            input.type      = 'password';
+            btn.textContent = '👁️';
+        }
+    }
+
+    document.getElementById('toggle-password')?.addEventListener('click', function() {
+        togglePasswordVisibility('input-password', 'toggle-password');
+    });
+
+    document.getElementById('toggle-confirm-password')?.addEventListener('click', function() {
+        togglePasswordVisibility('input-confirm-password', 'toggle-confirm-password');
+    });
+
+    // ── Indicateur de force du mot de passe ───────────────────
+    document.getElementById('input-password')?.addEventListener('input', function() {
+        const password      = this.value;
+        const strengthBar   = document.getElementById('password-strength');
+        const strengthFill  = document.getElementById('strength-fill');
+        const strengthLabel = document.getElementById('strength-label');
+
+        if (!strengthBar || !strengthFill || !strengthLabel) return;
+
+        if (password.length === 0) {
+            strengthBar.style.display = 'none';
+            return;
+        }
+
+        strengthBar.style.display = 'block';
+
+        // Calculer la force du mot de passe
+        let score = 0;
+        if (password.length >= 8)          score++; // longueur minimale
+        if (password.length >= 12)         score++; // longueur confortable
+        if (/[A-Z]/.test(password))        score++; // majuscule
+        if (/[0-9]/.test(password))        score++; // chiffre
+        if (/[^A-Za-z0-9]/.test(password)) score++; // caractère spécial
+
+        // Afficher le niveau de force
+        const levels = [
+            { label: 'Très faible', color: '#ff4444', width: '20%'  },
+            { label: 'Faible',      color: '#ff8800', width: '40%'  },
+            { label: 'Moyen',       color: '#ffcc00', width: '60%'  },
+            { label: 'Fort',        color: '#88cc00', width: '80%'  },
+            { label: 'Très fort',   color: '#00cc44', width: '100%' },
+        ];
+
+        const level = levels[Math.min(score, 4)];
+        strengthFill.style.width      = level.width;
+        strengthFill.style.background = level.color;
+        strengthLabel.textContent     = level.label;
+        strengthLabel.style.color     = level.color;
+    });
+
+    // ── Vérification de correspondance en temps réel ──────────
+    document.getElementById('input-confirm-password')?.addEventListener('input', function() {
+        const password        = document.getElementById('input-password').value;
+        const confirmPassword = this.value;
+        const matchEl         = document.getElementById('password-match');
+
+        if (!matchEl) return;
+
+        if (confirmPassword.length === 0) {
+            matchEl.style.display = 'none';
+            return;
+        }
+
+        matchEl.style.display = 'block';
+
+        if (password === confirmPassword) {
+            matchEl.textContent = '✅ Les mots de passe correspondent';
+            matchEl.style.color = '#00cc44';
+        } else {
+            matchEl.textContent = '❌ Les mots de passe ne correspondent pas';
+            matchEl.style.color = '#ff4444';
         }
     });
 }
@@ -325,11 +430,11 @@ function initNewPasswordForm(token) {
  * @param {string} message  Le message à afficher
  */
 function showError(context, message) {
-    const errorEl = document.getElementById('error-message');
+    const errorEl   = document.getElementById('error-message');
     const successEl = document.getElementById('success-message');
 
     if (errorEl) {
-        errorEl.textContent  = message;
+        errorEl.textContent   = message;
         errorEl.style.display = 'block';
     }
     if (successEl) {
@@ -349,7 +454,7 @@ function showSuccess(context, message) {
     const errorEl   = document.getElementById('error-message');
 
     if (successEl) {
-        successEl.textContent  = message;
+        successEl.textContent   = message;
         successEl.style.display = 'block';
     }
     if (errorEl) {
@@ -397,4 +502,3 @@ function setLoading(btnId, loading) {
         btn.textContent = btn.dataset.text || btn.textContent;
     }
 }
- 

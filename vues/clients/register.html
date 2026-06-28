@@ -2,7 +2,12 @@
     Page d'inscription.
     Chargée dynamiquement par app.js dans <div id="app">.
     Pas de DOCTYPE, html, head ou body — c'est une vue partielle.
-    Toute la logique est dans assets/js/auth.js (initRegisterForm).
+    Toute la logique est dans assets/js/auth.js (initRegisterForm + initRegisterUX).
+
+    NOTE : Le <script> inline a été supprimé de cette vue.
+    Raison : les scripts injectés via innerHTML ne s'exécutent PAS dans le navigateur.
+    Toutes les interactions UX (toggle password, force, correspondance) sont
+    gérées dans initRegisterUX() dans auth.js, appelée par initRegisterForm().
 -->
 
 <div class="auth-container">
@@ -142,99 +147,3 @@
 
     </div>
 </div>
-
-<!-- Script inline pour les interactions UX de cette vue uniquement -->
-<script>
-/**
- * Afficher / Cacher le mot de passe
- * Quand l'utilisateur clique sur l'icône 👁️
- */
-function togglePasswordVisibility(inputId, btnId) {
-    const input = document.getElementById(inputId);
-    const btn   = document.getElementById(btnId);
-    if (!input || !btn) return;
-
-    if (input.type === 'password') {
-        input.type   = 'text';
-        btn.textContent = '🙈';
-    } else {
-        input.type   = 'password';
-        btn.textContent = '👁️';
-    }
-}
-
-document.getElementById('toggle-password')?.addEventListener('click', function() {
-    togglePasswordVisibility('input-password', 'toggle-password');
-});
-
-document.getElementById('toggle-confirm-password')?.addEventListener('click', function() {
-    togglePasswordVisibility('input-confirm-password', 'toggle-confirm-password');
-});
-
-/**
- * Indicateur de force du mot de passe
- * Se met à jour en temps réel pendant la saisie
- */
-document.getElementById('input-password')?.addEventListener('input', function() {
-    const password     = this.value;
-    const strengthBar  = document.getElementById('password-strength');
-    const strengthFill = document.getElementById('strength-fill');
-    const strengthLabel = document.getElementById('strength-label');
-
-    if (password.length === 0) {
-        strengthBar.style.display = 'none';
-        return;
-    }
-
-    strengthBar.style.display = 'block';
-
-    // Calculer la force du mot de passe
-    let score = 0;
-    if (password.length >= 8)  score++;  // longueur minimale
-    if (password.length >= 12) score++;  // longueur confortable
-    if (/[A-Z]/.test(password)) score++; // majuscule
-    if (/[0-9]/.test(password)) score++; // chiffre
-    if (/[^A-Za-z0-9]/.test(password)) score++; // caractère spécial
-
-    // Afficher le niveau de force
-    const levels = [
-        { label: 'Très faible', color: '#ff4444', width: '20%' },
-        { label: 'Faible',      color: '#ff8800', width: '40%' },
-        { label: 'Moyen',       color: '#ffcc00', width: '60%' },
-        { label: 'Fort',        color: '#88cc00', width: '80%' },
-        { label: 'Très fort',   color: '#00cc44', width: '100%' },
-    ];
-
-    const level = levels[Math.min(score, 4)];
-    strengthFill.style.width      = level.width;
-    strengthFill.style.background = level.color;
-    strengthLabel.textContent     = level.label;
-    strengthLabel.style.color     = level.color;
-});
-
-/**
- * Vérification de correspondance des mots de passe en temps réel
- */
-document.getElementById('input-confirm-password')?.addEventListener('input', function() {
-    const password        = document.getElementById('input-password').value;
-    const confirmPassword = this.value;
-    const matchEl         = document.getElementById('password-match');
-
-    if (!matchEl) return;
-
-    if (confirmPassword.length === 0) {
-        matchEl.style.display = 'none';
-        return;
-    }
-
-    matchEl.style.display = 'block';
-
-    if (password === confirmPassword) {
-        matchEl.textContent = '✅ Les mots de passe correspondent';
-        matchEl.style.color = '#00cc44';
-    } else {
-        matchEl.textContent = '❌ Les mots de passe ne correspondent pas';
-        matchEl.style.color = '#ff4444';
-    }
-});
-</script>

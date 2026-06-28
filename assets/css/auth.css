@@ -269,9 +269,7 @@
 /* ==========================================================================
    10. PAGE RESET PASSWORD — ÉTAPES
    ========================================================================== */
-.reset-step {
-    /* Les étapes sont affichées/cachées par auth.js */
-}
+/* Les étapes sont affichées/cachées par auth.js */
 
 /* ==========================================================================
    11. PAGE LOGIN ADMIN (back-office)

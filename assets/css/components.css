@@ -1,1 +1,13 @@
-/* [assets/css/components.css] — TODO */
+.features-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 50px 5%;
+}
+
+.feature-box {
+    width: 30%;
+    text-align: center;
+    padding: 20px;
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+}

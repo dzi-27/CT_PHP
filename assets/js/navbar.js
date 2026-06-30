@@ -1,3 +1,4 @@
+
 /**
  * Gestion de la barre de navigation commune.
  * 

@@ -190,3 +190,47 @@ img {
     color: var(--muted);
     padding: 40px;
 }
+
+/* ==========================================================================
+   6. GESTION DES FONDS DE PAGE (Backgrounds spécifiques)
+   ========================================================================== */
+
+/* Appliquer ces classes au <body> de vos fichiers HTML respectifs */
+
+/* Fond persistant et fixe pour toutes les pages */
+body.bg-fixed {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* L'image ne bouge pas au scroll */
+}
+
+/* Page CHAT */
+.fond-chat {
+    background-image: url('../images/developpeur-web.jpg');
+}
+
+/* Page AUTH */
+.fond-auth {
+    background-image: url('../images/jpg1.jpg');
+}
+
+/* Page FEED */
+.fond-feed {
+    background-image: url('../images/importance-sitemaps.jpg');
+}
+
+/* Overlay pour assurer la lisibilité du texte sur fond d'image */
+/* On applique cela à votre conteneur principal */
+#app {
+    background-color: rgba(255, 255, 255, 0.85); /* Blanc semi-transparent */
+    min-height: 100vh;
+    padding-top: 60px; /* Conserve votre espace pour la navbar */
+    margin: 0 auto;
+    max-width: 1200px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/* Assurer que les titres et boutons ressortent bien sur le fond blanc */
+h1, h2, h3 { color: var(--primary); }
+button { background-color: var(--primary); color: white; }

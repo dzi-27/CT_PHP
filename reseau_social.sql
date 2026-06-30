@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:3306
--- Généré le : mer. 24 juin 2026 à 22:41
+-- Généré le : mar. 30 juin 2026 à 10:54
 -- Version du serveur : 8.4.10-0ubuntu0.26.04.1
 -- Version de PHP : 8.5.4
 
@@ -33,7 +33,7 @@ CREATE TABLE `comments` (
   `post_id` int NOT NULL,
   `contenu` text NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -47,7 +47,7 @@ CREATE TABLE `friendships` (
   `receiver_id` int NOT NULL,
   `status` enum('pending','accepted') DEFAULT 'pending',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -61,7 +61,7 @@ CREATE TABLE `likes` (
   `post_id` int NOT NULL,
   `type` enum('like','dislike') NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -77,7 +77,7 @@ CREATE TABLE `messages` (
   `image` varchar(255) DEFAULT NULL,
   `type` enum('text','image') DEFAULT 'text',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -91,7 +91,7 @@ CREATE TABLE `password_resets` (
   `token` varchar(64) NOT NULL,
   `expires_at` datetime NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -105,7 +105,7 @@ CREATE TABLE `posts` (
   `description` text NOT NULL,
   `image` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -119,7 +119,7 @@ CREATE TABLE `sessions` (
   `token` varchar(64) NOT NULL,
   `expires_at` datetime NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `sessions`
@@ -127,7 +127,8 @@ CREATE TABLE `sessions` (
 
 INSERT INTO `sessions` (`id`, `user_id`, `token`, `expires_at`, `created_at`) VALUES
 (1, 2, '7e90085b24323cccf25f7b8bbf0e06e67ccf160e9f21922507100e4843020bdc', '2026-07-01 18:51:14', '2026-06-24 18:51:14'),
-(2, 2, '12d519093efef31bf25baaa617dbafd39490b01917fa1cdfc53df80314e027ae', '2026-07-01 18:55:48', '2026-06-24 18:55:48');
+(2, 2, '12d519093efef31bf25baaa617dbafd39490b01917fa1cdfc53df80314e027ae', '2026-07-01 18:55:48', '2026-06-24 18:55:48'),
+(4, 3, '410c7833a99f76a0ea61f36813afc8284366c9a09ac856684d9a3c1a8edbfa5a', '2026-07-04 06:31:02', '2026-06-27 06:31:02');
 
 -- --------------------------------------------------------
 
@@ -146,7 +147,7 @@ CREATE TABLE `users` (
   `role` enum('user','moderator','admin') DEFAULT 'user',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `is_online` tinyint(1) DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `users`
@@ -154,7 +155,9 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `prenom`, `nom`, `email`, `password`, `avatar`, `bio`, `role`, `created_at`, `is_online`) VALUES
 (1, 'Super', 'Admin', 'admin@reseau-social.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'assets/images/default-avatar.png', NULL, 'admin', '2026-06-19 23:13:21', 0),
-(2, 'Sean', 'Test', 'sean@test.com', '$2y$12$i4g2R2VR3NVIswCVsh/rquo9g7yVC3FmYUI.6QEUkOWNm64QImE4C', 'assets/images/default-avatar.png', NULL, 'user', '2026-06-24 18:51:14', 1);
+(2, 'Sean', 'Test', 'sean@test.com', '$2y$12$i4g2R2VR3NVIswCVsh/rquo9g7yVC3FmYUI.6QEUkOWNm64QImE4C', 'assets/images/default-avatar.png', NULL, 'user', '2026-06-24 18:51:14', 1),
+(3, 'Sean', 'Test', 'test@test.com', '$2y$12$Z8l6Sf8huPqF96c6NrdWWO37D.ha4ageRHuyivBDdoEOZZLTCt9Qe', 'assets/images/default-avatar.png', NULL, 'user', '2026-06-27 06:31:02', 0),
+(4, 'Yvans', 'NASS', 'yvans@gmail.com', '$2y$12$NnjGvVmq9hEfCT9H.B9.4uF4C.3qm/4uAbguVa6JPFcWqTfpMRG8S', 'assets/images/default-avatar.png', NULL, 'user', '2026-06-30 00:36:12', 0);
 
 --
 -- Index pour les tables déchargées
@@ -266,13 +269,13 @@ ALTER TABLE `posts`
 -- AUTO_INCREMENT pour la table `sessions`
 --
 ALTER TABLE `sessions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT pour la table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Contraintes pour les tables déchargées

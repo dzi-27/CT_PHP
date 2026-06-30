@@ -120,6 +120,25 @@ async function loadView() {
                 navbarContainer.innerHTML = '';
             }
         }
+      
+      
+        // ── GESTION DYNAMIQUE DU FOND D'ÉCRAN ──
+        const body = document.body;
+        
+        // 1. On nettoie les classes de fond existantes
+        body.classList.remove('fond-chat', 'fond-auth', 'fond-feed');
+        body.classList.add('bg-fixed'); // On s'assure que la classe de base est là
+
+        // 2. On applique la classe selon la route
+        if (route === '/chat') {
+            body.classList.add('fond-chat');
+        } else if (route === '/login' || route === '/register' || route === '/reset') {
+            body.classList.add('fond-auth');
+        } else if (route === '/home') {
+            body.classList.add('fond-feed');
+        }
+
+       
 
         // Initialiser le module JS de la vue
         // L'arrow function dans ROUTES résout la bonne fonction au moment

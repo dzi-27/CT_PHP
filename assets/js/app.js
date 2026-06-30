@@ -1,15 +1,15 @@
-/** 
+/**
  * Routeur principal de la SPA (Single Page Application).
- * 
+ *
  * Dans ce projet, il n'y a qu'une seule page HTML (index.html).
  * C'est ce fichier qui gère la navigation entre les différentes vues
  * SANS recharger la page, en utilisant le hash de l'URL.
- * 
+ *
  * Exemple :
- *   http://localhost/reseau-social/#/home    → charge la vue home
- *   http://localhost/reseau-social/#/chat    → charge la vue chat
- *   http://localhost/reseau-social/#/friends → charge la vue friends
- * 
+ *   http://localhost/CT_PHP/#/home    → charge la vue home
+ *   http://localhost/CT_PHP/#/chat    → charge la vue chat
+ *   http://localhost/CT_PHP/#/friends → charge la vue friends
+ *
  * Comment ça marche :
  *   1. L'utilisateur clique sur un lien
  *   2. Le hash de l'URL change (#/home, #/chat, etc.)
@@ -18,36 +18,45 @@
  *   5. Il initialise le module JS correspondant
  */
 
-// ─── CONFIGURATION DES ROUTES ────────────────────────────────────────────────
+// ─── CONFIGURATION DES ROUTES ─────────────────────────────────────────────────
 /**
- * Table de correspondance entre les routes et les fichiers.
- * 
- * Chaque route a :
- *   - view   : le fichier HTML à charger dans #app
- *   - init   : la fonction JS à appeler après le chargement de la vue
- *   - auth   : true = l'utilisateur doit être connecté pour accéder à cette route
+ * CORRECTION CLÉ : on utilise des arrow functions () => initAuth()
+ * au lieu de références directes initAuth.
+ *
+ * Pourquoi ? Parce que les déclarations "function" en bas de ce fichier
+ * sont "hoistées" (remontées) par JavaScript et écrasent les vraies
+ * fonctions définies dans auth.js, feed.js, etc.
+ *
+ * Avec () => initAuth(), la fonction est RÉSOLUE au moment de l'appel,
+ * pas au moment du chargement — donc elle pointe toujours vers la vraie
+ * implémentation dans le bon fichier JS.
  */
 const ROUTES = {
-    '/login':    { view: 'vues/clients/login.html',          init: initAuth,    auth: false },
-    '/register': { view: 'vues/clients/register.html',       init: initAuth,    auth: false },
-    '/reset':    { view: 'vues/clients/reset-password.html', init: initAuth,    auth: false },
-    '/home':     { view: 'vues/clients/home.html',           init: initFeed,    auth: true  },
-    '/profile':  { view: 'vues/clients/profile.html',        init: initProfile, auth: true  },
-    '/friends':  { view: 'vues/clients/friends.html',        init: initFriends, auth: true  },
-    '/chat':     { view: 'vues/clients/chat.html',           init: initChat,    auth: true  },
+    '/login':            { view: 'vues/clients/login.html',              init: () => initAuth(),    auth: false },
+    '/register':         { view: 'vues/clients/register.html',           init: () => initAuth(),    auth: false },
+    '/reset':            { view: 'vues/clients/reset-password.html',     init: () => initAuth(),    auth: false },
+    '/home':             { view: 'vues/clients/home.html',               init: () => initFeed(),    auth: true  },
+    '/profile':          { view: 'vues/clients/profile.html',            init: () => initProfile(), auth: true  },
+    '/friends':          { view: 'vues/clients/friends.html',            init: () => initFriends(), auth: true  },
+    '/chat':             { view: 'vues/clients/chat.html',               init: () => initChat(),    auth: true  },
+    '/admin/login':      { view: 'vues/back-office/login.html',          init: () => initAdmin(),   auth: false },
+    '/admin/dashboard':  { view: 'vues/back-office/dashboard.html',      init: () => initAdmin(),   auth: false },
+    '/admin/users':      { view: 'vues/back-office/users.html',          init: () => initAdmin(),   auth: false },
+    '/admin/posts':      { view: 'vues/back-office/posts.html',          init: () => initAdmin(),   auth: false },
+    '/admin/moderators': { view: 'vues/back-office/moderators.html',     init: () => initAdmin(),   auth: false },
 };
 
-// ─── ZONE D'AFFICHAGE PRINCIPALE ─────────────────────────────────────────────
+// ─── ZONE D'AFFICHAGE PRINCIPALE ──────────────────────────────────────────────
 /**
  * C'est dans cette div que toutes les vues seront injectées.
  * Elle doit exister dans index.html : <div id="app"></div>
  */
 const appContainer = document.getElementById('app');
 
-// ─── FONCTION PRINCIPALE : CHARGER UNE VUE ───────────────────────────────────
+// ─── FONCTION PRINCIPALE : CHARGER UNE VUE ────────────────────────────────────
 /**
  * loadView()
- * 
+ *
  * Lit le hash actuel de l'URL, trouve la route correspondante,
  * charge le fichier HTML et initialise le module JS.
  */
@@ -55,7 +64,7 @@ async function loadView() {
     // Récupérer la route depuis le hash de l'URL
     // Ex: "#/home" → "/home"
     const hash  = window.location.hash || '#/login';
-    const route = hash.replace('#', '') || '/login';
+    const route = hash.replace('#', '').split('?')[0] || '/login';
 
     // Trouver la configuration de cette route
     const config = ROUTES[route];
@@ -96,12 +105,25 @@ async function loadView() {
         // Injecter le HTML dans la zone #app
         appContainer.innerHTML = html;
 
-        // Initialiser la navbar sur toutes les vues protégées
-        if (config.auth) {
+        // Initialiser la navbar sur toutes les vues protégées clients
+        // (pas sur le back-office qui a sa propre sidebar)
+        if (config.auth && !route.startsWith('/admin')) {
             initNavbar();
+        } else {
+            // CORRECTION : vider la navbar sur les pages publiques
+            // (login, register, reset) et sur le back-office.
+            // Sans ça, la navbar reste affichée après une déconnexion
+            // car #navbar et #app sont deux conteneurs séparés —
+            // vider #app ne vide pas #navbar automatiquement.
+            const navbarContainer = document.getElementById('navbar');
+            if (navbarContainer) {
+                navbarContainer.innerHTML = '';
+            }
         }
 
         // Initialiser le module JS de la vue
+        // L'arrow function dans ROUTES résout la bonne fonction au moment
+        // de l'appel, après que tous les fichiers JS sont chargés.
         if (typeof config.init === 'function') {
             config.init();
         }
@@ -118,13 +140,13 @@ async function loadView() {
     }
 }
 
-// ─── VÉRIFICATION DE SESSION ──────────────────────────────────────────────────
+// ─── VÉRIFICATION DE SESSION ───────────────────────────────────────────────────
 /**
  * verifierSession()
- * 
+ *
  * Appelle l'API pour vérifier si le token stocké dans sessionStorage
  * est encore valide en base de données.
- * 
+ *
  * @returns {boolean} true si la session est valide, false sinon
  */
 async function verifierSession() {
@@ -141,26 +163,36 @@ async function verifierSession() {
     }
 }
 
-// ─── FONCTIONS D'INITIALISATION DES MODULES ──────────────────────────────────
+// ─── GUARDS DES MODULES ────────────────────────────────────────────────────────
 /**
- * Ces fonctions sont définies dans leurs fichiers JS respectifs.
- * On les déclare ici en tant que fonctions vides par défaut
- * pour éviter les erreurs si un fichier JS n'est pas encore chargé.
+ * Ces guards vérifient si la fonction existe déjà (définie dans son
+ * fichier JS dédié). Si oui → on la laisse tranquille.
+ * Si non → on crée un fallback d'avertissement.
+ *
+ * IMPORTANT : on utilise des guards avec "typeof" et NON des déclarations
+ * "function" classiques, car une déclaration function est hoistée et
+ * écraserait la vraie fonction définie dans auth.js / feed.js / etc.
+ *
+ * Ordre de chargement dans index.html :
+ *   api.js → auth.js → feed.js → friends.js → chat.js → navbar.js → admin.js → app.js
+ * Donc quand app.js s'exécute, toutes les vraies fonctions sont déjà
+ * disponibles — les guards ne servent que de filet de sécurité.
  */
-function initAuth()    { console.log('Module Auth chargé');    }
-function initFeed()    { console.log('Module Feed chargé');    }
-function initProfile() { console.log('Module Profile chargé'); }
-function initFriends() { console.log('Module Friends chargé'); }
-function initChat()    { console.log('Module Chat chargé');    }
-function initNavbar()  { console.log('Navbar chargée');        }
+if (typeof initAuth    === 'undefined') window.initAuth    = function() { console.warn('⚠️ auth.js non chargé');    };
+if (typeof initFeed    === 'undefined') window.initFeed    = function() { console.warn('⚠️ feed.js non chargé');    };
+if (typeof initProfile === 'undefined') window.initProfile = function() { console.warn('⚠️ profile.js non chargé'); };
+if (typeof initFriends === 'undefined') window.initFriends = function() { console.warn('⚠️ friends.js non chargé'); };
+if (typeof initChat    === 'undefined') window.initChat    = function() { console.warn('⚠️ chat.js non chargé');    };
+if (typeof initNavbar  === 'undefined') window.initNavbar  = function() { console.warn('⚠️ navbar.js non chargé');  };
+if (typeof initAdmin   === 'undefined') window.initAdmin   = function() { console.warn('⚠️ admin.js non chargé');   };
 
-// ─── ÉCOUTE DES CHANGEMENTS DE ROUTE ─────────────────────────────────────────
+// ─── ÉCOUTE DES CHANGEMENTS DE ROUTE ──────────────────────────────────────────
 /**
  * On écoute deux événements :
- * 
+ *
  * 1. "hashchange" → déclenché quand le hash de l'URL change
  *    (ex: clic sur un lien #/home)
- * 
+ *
  * 2. "DOMContentLoaded" → déclenché au premier chargement de la page
  *    (ex: l'utilisateur ouvre l'application ou rafraîchit la page)
  */

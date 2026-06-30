@@ -1,11 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Réseau Social</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkUP</title>
+
+    <!-- main.css EN PREMIER — il définit les variables CSS utilisées partout -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
+    <link rel="stylesheet" href="assets/css/feed.css">
+    <link rel="stylesheet" href="assets/css/chat.css">
+    <link rel="stylesheet" href="assets/css/profile.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
-  <!-- [index.html] — TODO -->
+
+    <!-- Navbar injectée ici par navbar.js -->
+    <div id="navbar"></div>
+
+    <!-- Toutes les vues sont injectées ici par app.js -->
+    <div id="app"></div>
+
+    <!-- JS — api.js EN PREMIER, app.js EN DERNIER -->
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/navbar.js"></script>
+    <script src="assets/js/feed.js"></script>
+    <script src="assets/js/profile.js"></script>
+    <script src="assets/js/friends.js"></script>
+    <script src="assets/js/chat.js"></script>
+    <script src="assets/js/admin.js"></script>
+    <!-- app.js EN DERNIER — il démarre le routeur une fois tous les modules chargés -->
+    <script src="assets/js/app.js"></script>
+
 </body>
 </html>
